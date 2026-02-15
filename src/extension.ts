@@ -1,4 +1,4 @@
-import { workspace, ExtensionContext, commands } from 'vscode';
+import { workspace, ExtensionContext, commands, window, Terminal } from 'vscode';
 import {
     LanguageClient,
     LanguageClientOptions,
@@ -6,6 +6,28 @@ import {
 } from 'vscode-languageclient/node';
 
 let client: LanguageClient;
+let terminal: Terminal | undefined;
+
+function getTerminal(): Terminal {
+    if (!terminal) {
+        terminal = window.createTerminal('Zen C');
+    }
+    return terminal;
+}
+
+function executeZCCommand(command: string, args: string[] = []): void {
+    const terminal = getTerminal();
+    const config = workspace.getConfiguration('zen-c');
+    const cCompiler = config.get<string>('cCompiler', 'gcc');
+    
+    const compileCommands = ['run', 'build'];
+    if (compileCommands.includes(command)) {
+        args = [`--cc`, cCompiler, ...args];
+    }
+    
+    terminal.show(true);
+    terminal.sendText(`zc ${command} ${args.join(' ')}`);
+}
 
 export function activate(context: ExtensionContext) {
     const command = 'zc';
@@ -37,18 +59,41 @@ export function activate(context: ExtensionContext) {
 
     client.start();
 
-    const restartCommand = commands.registerCommand('zen-c.restartLanguageServer', () => {
+    const restartLspCommand = commands.registerCommand('zen-c.lsp.restart', () => {
         client.stop().then(() => {
             client.start();
         });
     });
 
-    context.subscriptions.push(restartCommand);
+    const runCommand = commands.registerCommand('zen-c.run', (resource) => {
+        let args: string[] = [];
+        if (resource && resource.fsPath) {
+            args = [resource.fsPath];
+        }
+        executeZCCommand('run', args);
+    });
+
+    const buildCommand = commands.registerCommand('zen-c.build', (resource) => {
+        let args: string[] = [];
+        if (resource && resource.fsPath) {
+            args = [resource.fsPath];
+        }
+        executeZCCommand('build', args);
+    });
+
+    context.subscriptions.push(
+        restartLspCommand,
+        runCommand,
+        buildCommand,
+    );
 }
 
 export function deactivate(): Thenable<void> | undefined {
     if (!client) {
         return undefined;
+    }
+    if (terminal) {
+        terminal.dispose();
     }
     return client.stop();
 }

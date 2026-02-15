@@ -2,9 +2,20 @@
     "name": "zen-c",
     "displayName": "Zen C",
     "description": "LSP support for Zen C",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Ujhhgtg/zen-c"
+    },
+    "bugs": {
+        "url": "https://github.com/Ujhhgtg/zen-c/issues"
+    },
     "version": "0.0.1",
     "publisher": "ujhhgtg",
     "license": "GPL-3.0-only",
+    "keywords": [
+        "zen-c",
+        "zen c"
+    ],
     "author": {
         "name": "Fey Xie",
         "email": "feyxiexzf@gmail.com"
@@ -40,10 +51,35 @@
         ],
         "commands": [
             {
-                "command": "zen-c.restartLanguageServer",
+                "command": "zen-c.lsp.restart",
                 "title": "Zen C: Restart Language Server"
+            },
+            {
+                "command": "zen-c.run",
+                "title": "Zen C: Compile and Run Current File"
+            },
+            {
+                "command": "zen-c.build",
+                "title": "Zen C: Compile Current File"
             }
-        ]
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "Zen C",
+            "properties": {
+                "zen-c.cCompiler": {
+                    "type": "string",
+                    "enum": [
+                        "gcc",
+                        "clang",
+                        "tcc",
+                        "zig"
+                    ],
+                    "default": "gcc",
+                    "description": "The C compiler to use for building Zen C programs"
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",

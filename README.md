@@ -25,6 +25,15 @@ This extension provides comprehensive language support for Zen C, featuring synt
 This extension contributes the following commands:
 
 * `zen-c.restartLanguageServer`: Restarts the Zen C language server
+* `zen-c.run`: Compile and run the current Zen C program
+* `zen-c.build`: Compile the current file to an executable
+* `zen-c.check`: Check the current file for errors
+* `zen-c.repl`: Start the Zen C interactive REPL
+* `zen-c.transpile`: Transpile the current file to C code
+
+### Configuration
+
+* `zen-c.cCompiler`: Specifies the C compiler to use for building Zen C programs. Options are `gcc`, `clang`, `tcc`, and `zig`. Defaults to `gcc`.
 
 ## Known Issues
 
