@@ -1,0 +1,71 @@
+{
+    "name": "zen-c",
+    "displayName": "Zen C",
+    "description": "LSP support for Zen C",
+    "version": "0.0.1",
+    "publisher": "ujhhgtg",
+    "license": "GPL-3.0-only",
+    "author": {
+        "name": "Fey Xie",
+        "email": "feyxiexzf@gmail.com"
+    },
+    "engines": {
+        "vscode": "^1.109.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "activationEvents": [],
+    "main": "./out/extension.js",
+    "contributes": {
+        "languages": [
+            {
+                "id": "zen-c",
+                "aliases": [
+                    "Zen-C",
+                    "zc"
+                ],
+                "extensions": [
+                    ".zc"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "zen-c",
+                "scopeName": "source.zc",
+                "path": "./syntaxes/zen-c.tmLanguage.json"
+            }
+        ],
+        "commands": [
+            {
+                "command": "zen-c.restartLanguageServer",
+                "title": "Zen C: Restart Language Server"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile && npm run lint",
+        "lint": "eslint src",
+        "test": "vscode-test",
+        "package": "vsce package"
+    },
+    "devDependencies": {
+        "@types/mocha": "^10.0.10",
+        "@types/node": "25.x",
+        "@types/vscode": "^1.109.0",
+        "@vscode/test-cli": "^0.0.12",
+        "@vscode/test-electron": "^2.5.2",
+        "@vscode/vsce": "^3.7.1",
+        "eslint": "^10.0.0",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.54.0"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^10.0.0-next.20"
+    }
+}

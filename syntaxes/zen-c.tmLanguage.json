@@ -1,0 +1,255 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Zen C",
+  "scopeName": "source.zen-c",
+  "fileTypes": ["zc"],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#build_directives"
+    },
+    {
+      "include": "#attributes"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#char_literals"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#constants"
+    },
+    {
+      "include": "#types"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#functions"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#punctuation"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "match": "//>.*$",
+          "name": "comment.line.documentation.build-directive.zen-c"
+        },
+        {
+          "match": "//.*$",
+          "name": "comment.line.double-slash.zen-c"
+        }
+      ]
+    },
+    "build_directives": {
+      "match": "^\\s*(//>)\\s*([a-z-]+)(:)(.*)$",
+      "captures": {
+        "1": {
+          "name": "keyword.other.directive.marker.zen-c"
+        },
+        "2": {
+          "name": "keyword.control.directive.zen-c"
+        },
+        "3": {
+          "name": "punctuation.separator.key-value.zen-c"
+        },
+        "4": {
+          "name": "string.unquoted.zen-c"
+        }
+      }
+    },
+    "attributes": {
+      "match": "(@)([a-zA-Z_]\\w*)(\\([^)]*\\))?",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.annotation.zen-c"
+        },
+        "2": {
+          "name": "storage.type.annotation.zen-c"
+        },
+        "3": {
+          "name": "meta.annotation.arguments.zen-c"
+        }
+      }
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.raw.zen-c",
+          "begin": "r\"",
+          "end": "\"",
+          "patterns": []
+        },
+        {
+          "name": "string.quoted.double.zen-c",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "match": "\\\\.",
+              "name": "constant.character.escape.zen-c"
+            },
+            {
+              "match": "\\{\\{|\\}\\}",
+              "name": "constant.character.escape.brace.zen-c"
+            },
+            {
+              "name": "meta.interpolation.zen-c",
+              "begin": "\\{",
+              "end": "\\}",
+              "patterns": [
+                {
+                  "include": "$self"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "char_literals": {
+      "match": "'([^'\\\\]|\\\\.)'",
+      "name": "string.quoted.single.char.zen-c"
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "match": "\\b0x[0-9a-fA-F_]+\\b",
+          "name": "constant.numeric.hex.zen-c"
+        },
+        {
+          "match": "\\b0b[01_]+\\b",
+          "name": "constant.numeric.binary.zen-c"
+        },
+        {
+          "match": "\\b[0-9][0-9_]*(\\.[0-9][0-9_]*)?([eE][+-]?[0-9_]+)?(f32|f64)?\\b",
+          "name": "constant.numeric.decimal.zen-c"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "match": "\\b(true|false|null)\\b",
+          "name": "constant.language.zen-c"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "match": "\\b(if|else|match|for|while|loop|break|continue|return|goto|guard|unless|defer|try|catch|async|await|launch|switch|case|default|do)\\b",
+          "name": "keyword.control.zen-c"
+        },
+        {
+          "match": "\\b(fn|struct|enum|union|trait|impl|type|alias|def|let|module|opaque|import|use|embed|comptime|asm|assert|autofree|sizeof|ref|test|const|static|volatile|extern|inline|register|restrict|typedef)\\b",
+          "name": "keyword.other.zen-c"
+        },
+        {
+          "match": "\\b(and|or)\\b",
+          "name": "keyword.operator.word.zen-c"
+        },
+        {
+          "match": "\\b(self)\\b",
+          "name": "variable.language.this.zen-c"
+        },
+        {
+          "match": "\\b(print|println|eprint|eprintln)\\b",
+          "name": "support.function.print.zen-c"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "match": "\\b(int|uint|c_char|c_uchar|c_short|c_ushort|c_int|c_uint|c_long|c_ulong|c_long_long|c_ulong_long|[iI](?:8|16|32|64|128)|[uU](?:8|16|32|64|128)|isize|usize|byte|[fF](?:32|64)|bool|char|string|void|[uU]0|va_list|_BitInt|auto)\\b",
+          "name": "storage.type.primitive.zen-c"
+        },
+        {
+          "match": "\\b[iu]\\d+\\b",
+          "name": "storage.type.primitive.bitint.zen-c"
+        }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "match": "\\b(fn)\\s+([a-zA-Z_]\\w*)",
+          "captures": {
+            "1": {
+              "name": "keyword.other.fn.zen-c"
+            },
+            "2": {
+              "name": "entity.name.function.definition.zen-c"
+            }
+          }
+        },
+        {
+          "match": "\\b([a-zA-Z_]\\w*)\\s*(?=\\()",
+          "name": "entity.name.function.call.zen-c"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "match": "(\\+|\\-|\\*|/|%|\\^|&|\\||!|~|<|>|=|\\?|\\.\\.|\\.\\.<|\\.\\.=)",
+          "name": "keyword.operator.zen-c"
+        },
+        {
+          "match": "\\|>",
+          "name": "keyword.operator.pipeline.zen-c"
+        },
+        {
+          "match": "\\?\\?",
+          "name": "keyword.operator.coalesce.zen-c"
+        },
+        {
+          "match": "->",
+          "name": "keyword.operator.arrow.zen-c"
+        },
+        {
+          "match": "=>",
+          "name": "keyword.operator.match.zen-c"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "match": ";",
+          "name": "punctuation.terminator.zen-c"
+        },
+        {
+          "match": "\\{|\\}",
+          "name": "punctuation.section.block.zen-c"
+        },
+        {
+          "match": "\\(|\\)",
+          "name": "punctuation.section.parens.zen-c"
+        },
+        {
+          "match": "\\[|\\]",
+          "name": "punctuation.section.brackets.zen-c"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.zen-c"
+        }
+      ]
+    }
+  }
+}
